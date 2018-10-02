@@ -4,9 +4,9 @@ from requests_futures.sessions import FuturesSession
 
 totalProfiles = 100
 session = FuturesSession()
+users = []
 
 for i in range(totalProfiles/100):
-  users = []
   data = session.get("https://www.roblox.com/search/users/results?keyword=fortnite&maxRows=100&startIndex=" + str(i*100)).result().json()
 
   totalProfiles = data["TotalResults"]
@@ -29,5 +29,5 @@ for i in range(totalProfiles/100):
 
     print("Profile " + str(user["UserId"]) + ": " + date)
 
-  with open("data.json", "a") as outfile:
-      json.dump(users, outfile)
+with open("data.json", "w") as outfile:
+    json.dump(users, outfile)
