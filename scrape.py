@@ -2,14 +2,20 @@ import json
 from bs4 import BeautifulSoup
 from requests_futures.sessions import FuturesSession
 
-totalProfiles = 100
 session = FuturesSession()
-users = []
 
-for i in range(totalProfiles/100):
-  data = session.get("https://www.roblox.com/search/users/results?keyword=fortnite&maxRows=100&startIndex=" + str(i*100)).result().json()
+searchUrl = "https://www.roblox.com/search/users/results?keyword=fortnite"
+totalResults = session.get(searchUrl).result().json()["TotalResults"]
 
-  totalProfiles = data["TotalResults"]
+# clear/new file
+with open("data.json", "w") as outfile:
+  outfile.write("[")
+
+for i in range(totalResults/100):
+  users = []
+  data = session.get(searchUrl + "&maxRows=100&startIndex=" + str(i*100)).result().json()
+
+  print("[Index " + str(i*100) + " out of " + str(totalResults) + " profiles]")
 
   profileRequests = {}
   for user in data["UserSearchResults"]:
@@ -29,5 +35,12 @@ for i in range(totalProfiles/100):
 
     print("Profile " + str(user["UserId"]) + ": " + date)
 
-with open("data.json", "w") as outfile:
-    json.dump(users, outfile)
+  with open("data.json", "a") as outfile:
+    outfile.write(json.dumps(users)[1:-1]) # remove brackets
+    if i+1 < totalResults/100:
+      outfile.write(",") # add trailing slash if not last
+    else:
+      outfile.write("]") # add ] if it is
+
+  print("JSON dumped")
+
