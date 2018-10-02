@@ -7,7 +7,7 @@ users = []
 session = FuturesSession()
 
 for i in range(totalProfiles/100):
-  data = requests.get("https://www.roblox.com/search/users/results?keyword=fortnite&maxRows=100&startIndex=" + str(i*100)).json()
+  data = session.get("https://www.roblox.com/search/users/results?keyword=fortnite&maxRows=100&startIndex=" + str(i*100)).result().json()
   # print(data)
 
   totalProfiles = data["TotalResults"]
