@@ -1,4 +1,4 @@
-import requests, json
+import json
 from bs4 import BeautifulSoup
 from requests_futures.sessions import FuturesSession
 
